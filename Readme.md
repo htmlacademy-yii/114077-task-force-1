@@ -1,7 +1,7 @@
 # Личный проект «TaskForce»
 
 * Студент: [Иван Загайнов](https://up.htmlacademy.ru/yii/1/user/114077).
-* Наставник: [чат в слаке](https://app.slack.com).
+* Наставник: [Никита Медведев](https://htmlacademy.ru/profile/id1281715).
 
 ---
 
