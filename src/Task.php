@@ -15,7 +15,7 @@ class Task
     const ACTION_DONE = 'do_done';
     const ACTION_REFUSE = 'do_refuse';
 
-    public $status_values = [
+    private $status_values = [
         self::STATUS_NEW => 'Новое',
         self::STATUS_CANCEL => 'Отменено',
         self::STATUS_PROCEED => 'В работе',
@@ -23,34 +23,34 @@ class Task
         self::STATUS_FAIL => 'Провалено',
     ];
 
-    public $action_values = [
+    private $action_values = [
         self::ACTION_CANCEL => 'Отменить',
         self::ACTION_CALL => 'Откликнуться',
         self::ACTION_DONE => 'Выполнено',
         self::ACTION_REFUSE => 'Отказаться'
     ];
 
-    public $next_statuses = [
-        'ACTION_CANCEL' => 'STATUS_CANCEL',
-        'ACTION_CALL' => 'STATUS_PROCEED',
-        'ACTION_DONE' => 'STATUS_DONE',
-        'ACTION_REFUSE' => 'STATUS_FAIL',
+    private $next_statuses = [
+        self::ACTION_CANCEL => self::STATUS_CANCEL,
+        self::ACTION_CALL => self::STATUS_PROCEED,
+        self::ACTION_DONE => self::STATUS_DONE,
+        self::ACTION_REFUSE => self::STATUS_FAIL,
     ];
 
-    public $available_actions = [
-        'STATUS_NEW' => ['ACTION_CANCEL', 'ACTION_CALL'],
-        'STATUS_PROCEED' => ['ACTION_DONE', 'ACTION_REFUSE']
+    private $available_actions = [
+        self::STATUS_NEW => [self::ACTION_CANCEL, self::ACTION_CALL],
+        self::STATUS_PROCEED => [self::ACTION_DONE, self::ACTION_REFUSE]
     ];
 
-    private $id_client;
-    private $id_worker;
+    private $client_id;
+    private $worker_id;
 
     public function __construct($id_client, $id_worker) {
         $this->id_client = $id_client;
         $this->id_worker = $id_worker;
     }
 
-    public function getStatusVaules() {
+    public function getStatusValues() {
         return $this->status_values;
     }
 
@@ -59,10 +59,18 @@ class Task
     }
 
     public function getNextStatus($action) {
-        return $this->next_statuses[$action];
+        $next_status = false;
+        if (array_key_exists ($action, $this->next_statuses)) {
+            $next_status = $this->next_statuses[$action];
+        }
+        return $next_status;
     }
 
     public function getAvailableAction($status) {
-        return $this->available_actions[$status];
+        $available_actions = false;
+        if (array_key_exists ($status, $this->available_actions)) {
+            $available_actions = $this->available_actions[$status];;
+        }
+        return $available_actions;
     }
 }
