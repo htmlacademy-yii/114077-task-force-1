@@ -1,6 +1,7 @@
 <?php
 
-namespace TaskForce\Tasks;
+use TaskForce\Tasks\Task;
+require_once 'vendor/autoload.php';
 
 use PHPUnit\Framework\TestCase;
 
