@@ -45,9 +45,9 @@ class Task
     private $client_id;
     private $worker_id;
 
-    public function __construct($id_client, $id_worker) {
-        $this->id_client = $id_client;
-        $this->id_worker = $id_worker;
+    public function __construct($client_id, $worker_id) {
+        $this->client_id = $client_id;
+        $this->worker_id = $worker_id;
     }
 
     public function getStatusValues() {
