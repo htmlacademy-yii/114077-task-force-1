@@ -20,13 +20,6 @@ CREATE TABLE `user`
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `user_role`
-(
-    `id`   INT(11)      NOT NULL AUTO_INCREMENT,
-    `role` varchar(255) NOT NULL DEFAULT 'user',
-    PRIMARY KEY (`id`)
-);
-
 CREATE TABLE `task`
 (
     `id`              INT(11)  NOT NULL AUTO_INCREMENT,
@@ -43,13 +36,6 @@ CREATE TABLE `task`
     `enforcer_id`     INT(11),
     `additional_text` TEXT,
     `messages`        INT      NOT NULL,
-    PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `task_status`
-(
-    `id`   INT(11)      NOT NULL AUTO_INCREMENT,
-    `name` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
 );
 
@@ -109,13 +95,6 @@ CREATE TABLE `messages`
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `user_status`
-(
-    `id`   INT(11)      NOT NULL AUTO_INCREMENT,
-    `name` varchar(255) NOT NULL,
-    PRIMARY KEY (`id`)
-);
-
 CREATE TABLE `category`
 (
     `id`   INT(11)      NOT NULL AUTO_INCREMENT,
@@ -129,14 +108,6 @@ CREATE TABLE `user_category`
     `category_id` INT(11) NOT NULL
 );
 
-ALTER TABLE `user`
-    ADD CONSTRAINT `user_role_fk` FOREIGN KEY (`role`) REFERENCES `user_role` (`id`);
-
-ALTER TABLE `user`
-    ADD CONSTRAINT `user_status_fk` FOREIGN KEY (`user_status`) REFERENCES `user_status` (`id`);
-
-ALTER TABLE `task`
-    ADD CONSTRAINT `task_status_fk` FOREIGN KEY (`status_id`) REFERENCES `task_status` (`id`);
 
 ALTER TABLE `task`
     ADD CONSTRAINT `customer_id_fk` FOREIGN KEY (`customer_id`) REFERENCES `user` (`id`);
