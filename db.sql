@@ -41,15 +41,15 @@ CREATE TABLE `task`
 
 CREATE TABLE `task_category`
 (
-    `id`   INT(11)      NOT NULL AUTO_INCREMENT,
-    `name` varchar(255) NOT NULL,
+    `id`   INT(11)  NOT NULL AUTO_INCREMENT,
+    `name` TEXT     NOT NULL,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `city`
 (
     `id`        INT(11)      NOT NULL AUTO_INCREMENT,
-    `name`      varchar(255) NOT NULL,
+    `name`      TEXT         NOT NULL,
     `latitude`  FLOAT        NOT NULL,
     `longitude` FLOAT        NOT NULL,
     PRIMARY KEY (`id`)
@@ -78,10 +78,10 @@ CREATE TABLE `user_review`
 
 CREATE TABLE `photo`
 (
-    `id`      INT(11)      NOT NULL AUTO_INCREMENT,
-    `path`    varchar(255) NOT NULL,
+    `id`      INT(11)    NOT NULL AUTO_INCREMENT,
+    `path`    TEXT       NOT NULL,
     `alt`     TEXT,
-    `user_id` INT(11)      NOT NULL,
+    `user_id` INT(11)    NOT NULL,
     PRIMARY KEY (`id`)
 );
 
@@ -97,8 +97,8 @@ CREATE TABLE `messages`
 
 CREATE TABLE `category`
 (
-    `id`   INT(11)      NOT NULL AUTO_INCREMENT,
-    `name` varchar(255) NOT NULL,
+    `id`   INT(11)   NOT NULL AUTO_INCREMENT,
+    `name` TEXT      NOT NULL,
     PRIMARY KEY (`id`)
 );
 
