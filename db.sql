@@ -11,12 +11,12 @@ CREATE TABLE `user`
     `birthday`      DATE,
     `bio`           TEXT,
     `avatar_path`   TEXT,
-    `viewing_count` INT(11)  NOT NULL DEFAULT '0',
-    `role`          ENUM(''),
+    `viewing_count` INT(11)  NOT NULL                                     DEFAULT '0',
+    `role`          ENUM ('admin', 'moderator', 'user')                   DEFAULT 'user',
     `phone`         varchar(11),
     `skype`         varchar(255),
     `telegram`      varchar(255),
-    `user_status`   ENUM(''),
+    `user_status`   ENUM ('active', 'on_moderation', 'blocked', 'delete') DEFAULT 'active',
     PRIMARY KEY (`id`)
 );
 
@@ -24,7 +24,7 @@ CREATE TABLE `task`
 (
     `id`              INT(11)  NOT NULL AUTO_INCREMENT,
     `publish_date`    DATETIME NOT NULL,
-    `status_id`       ENUM(''),
+    `status`          ENUM ('new', 'cancel', 'in_work', 'done', 'fail') DEFAULT 'new',
     `title`           TEXT     NOT NULL,
     `description`     TEXT     NOT NULL,
     `budget`          INT(11),
@@ -41,17 +41,17 @@ CREATE TABLE `task`
 
 CREATE TABLE `task_category`
 (
-    `id`   INT(11)  NOT NULL AUTO_INCREMENT,
-    `name` TEXT     NOT NULL,
+    `id`   INT(11) NOT NULL AUTO_INCREMENT,
+    `name` TEXT    NOT NULL,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `city`
 (
-    `id`        INT(11)      NOT NULL AUTO_INCREMENT,
-    `name`      TEXT         NOT NULL,
-    `latitude`  FLOAT        NOT NULL,
-    `longitude` FLOAT        NOT NULL,
+    `id`        INT(11) NOT NULL AUTO_INCREMENT,
+    `name`      TEXT    NOT NULL,
+    `latitude`  FLOAT   NOT NULL,
+    `longitude` FLOAT   NOT NULL,
     PRIMARY KEY (`id`)
 );
 
@@ -78,10 +78,10 @@ CREATE TABLE `user_review`
 
 CREATE TABLE `photo`
 (
-    `id`      INT(11)    NOT NULL AUTO_INCREMENT,
-    `path`    TEXT       NOT NULL,
+    `id`      INT(11) NOT NULL AUTO_INCREMENT,
+    `path`    TEXT    NOT NULL,
     `alt`     TEXT,
-    `user_id` INT(11)    NOT NULL,
+    `user_id` INT(11) NOT NULL,
     PRIMARY KEY (`id`)
 );
 
@@ -97,8 +97,8 @@ CREATE TABLE `messages`
 
 CREATE TABLE `category`
 (
-    `id`   INT(11)   NOT NULL AUTO_INCREMENT,
-    `name` TEXT      NOT NULL,
+    `id`   INT(11) NOT NULL AUTO_INCREMENT,
+    `name` TEXT    NOT NULL,
     PRIMARY KEY (`id`)
 );
 
