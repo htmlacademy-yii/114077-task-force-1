@@ -15,7 +15,7 @@ class Task
     const ACTION_DONE = 'do_done';
     const ACTION_REFUSE = 'do_refuse';
 
-    private $status_values = [
+    private $statusValues = [
         self::STATUS_NEW => 'Новое',
         self::STATUS_CANCEL => 'Отменено',
         self::STATUS_PROCEED => 'В работе',
@@ -23,54 +23,78 @@ class Task
         self::STATUS_FAIL => 'Провалено',
     ];
 
-    private $action_values = [
+    private $actionValues = [
         self::ACTION_CANCEL => 'Отменить',
         self::ACTION_CALL => 'Откликнуться',
         self::ACTION_DONE => 'Выполнено',
         self::ACTION_REFUSE => 'Отказаться'
     ];
 
-    private $next_statuses = [
+    private $nextStatuses = [
         self::ACTION_CANCEL => self::STATUS_CANCEL,
         self::ACTION_CALL => self::STATUS_PROCEED,
         self::ACTION_DONE => self::STATUS_DONE,
         self::ACTION_REFUSE => self::STATUS_FAIL,
     ];
 
-    private $available_actions = [
+    private $availableActions = [
         self::STATUS_NEW => [self::ACTION_CANCEL, self::ACTION_CALL],
         self::STATUS_PROCEED => [self::ACTION_DONE, self::ACTION_REFUSE]
     ];
 
-    private $client_id;
-    private $worker_id;
+    private $clientId;
+    private $workerId;
 
-    public function __construct($id_client, $id_worker) {
-        $this->id_client = $id_client;
-        $this->id_worker = $id_worker;
+    /**
+     * Task constructor
+     *
+     * @param int $clientId - интификатор заказчика
+     * @param int $workerId - идентификатор исполнителя
+     */
+    public function __construct($clientId, $workerId) {
+        $this->clientId = $clientId;
+        $this->workerId = $workerId;
     }
 
+    /**
+     * @return array - расшифровка статусов
+     */
     public function getStatusValues() {
-        return $this->status_values;
+        return $this->statusValues;
     }
 
-    public function getActionVaules() {
-        return $this->action_values;
+    /**
+     * @return array - расшифровка действий заказчика
+     */
+    public function getActionValues() {
+        return $this->actionValues;
     }
 
+    /**
+     * Возвращает следующий статус, в соответствии с выбором действия (отклика) на заказ
+     *
+     * @param string $action - ключ, по которому определяется следующий статус
+     * @return bool|string
+     */
     public function getNextStatus($action) {
         $next_status = false;
-        if (array_key_exists ($action, $this->next_statuses)) {
-            $next_status = $this->next_statuses[$action];
+        if (array_key_exists ($action, $this->nextStatuses)) {
+            $next_status = $this->nextStatuses[$action];
         }
         return $next_status;
     }
 
+    /**
+     * Возвращает список доступных действий для текущего статуса
+     *
+     * @param string $status - текущий статус
+     * @return bool|array
+     */
     public function getAvailableAction($status) {
-        $available_actions = false;
-        if (array_key_exists ($status, $this->available_actions)) {
-            $available_actions = $this->available_actions[$status];;
+        $availableActions = false;
+        if (array_key_exists ($status, $this->availableActions)) {
+            $availableActions = $this->availableActions[$status];
         }
-        return $available_actions;
+        return $availableActions;
     }
 }

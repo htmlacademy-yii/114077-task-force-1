@@ -1,6 +1,7 @@
 <?php
 
-namespace TaskForce\Tasks;
+use TaskForce\Tasks\Task;
+require_once 'vendor/autoload.php';
 
 use PHPUnit\Framework\TestCase;
 
@@ -23,11 +24,11 @@ class TaskTest extends TestCase
     }
 
 
-    public function testGetActionVaules()
+    public function testgetActionValues()
     {
         $task = new Task(1,1);
 
-        $incomeArray = $task->getActionVaules();
+        $incomeArray = $task->getActionValues();
         $expArray = [
             $task::ACTION_CANCEL => 'Отменить',
             $task::ACTION_CALL => 'Откликнуться',
