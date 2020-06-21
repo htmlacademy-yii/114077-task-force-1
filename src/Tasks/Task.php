@@ -2,6 +2,9 @@
 
 namespace TaskForce\Tasks;
 
+use TaskForce\Tasks\Actions\NewAction;
+use TaskForce\Tasks\Actions\CancelAction;
+
 class Task
 {
     const STATUS_NEW = 'new';
@@ -44,6 +47,7 @@ class Task
 
     private $clientId;
     private $workerId;
+    private $status;
 
     /**
      * Task constructor
@@ -54,6 +58,30 @@ class Task
     public function __construct($clientId, $workerId) {
         $this->clientId = $clientId;
         $this->workerId = $workerId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWorkerId(): int
+    {
+        return $this->workerId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getClientId(): int
+    {
+        return $this->clientId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        return $this->status;
     }
 
     /**
@@ -97,4 +125,28 @@ class Task
         }
         return $availableActions;
     }
+
+    /**
+     * @param int $userId
+     */
+    public function start(int $userId) {
+        if (!NewAction::verifyAbility($userId, $this)) {
+            echo 'Ошибка';
+        }
+
+        $this->status = self::STATUS_NEW;
+    }
+
+    /**
+     * @param int $userId
+     */
+    public function cancel(int $userId) {
+        if (!CancelAction::verifyAbility($userId, $this)) {
+            echo 'Ошибка';
+        }
+
+        $this->status = self::STATUS_CANCEL;
+    }
+
+    // TODO: реализовать остальные классы
 }
