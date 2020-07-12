@@ -4,11 +4,11 @@ namespace TaskForce\Tasks\Actions;
 
 use TaskForce\Tasks\Task;
 
-class CancelAction extends AbstractAction
+class CallAction extends AbstractAction
 {
     public static function getName(): string
     {
-        return 'Отменено';
+        return 'Откликнуться';
     }
 
     public static function getCode(): string
@@ -18,6 +18,6 @@ class CancelAction extends AbstractAction
 
     public static function isAllowed(string $role, string $status): bool
     {
-        return ($role === Task::ROLE_CLIENT && $status === Task::STATUS_NEW);
+        return ($role === Task::ROLE_WORKER && $status === Task::STATUS_NEW);
     }
 }

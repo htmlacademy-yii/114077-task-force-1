@@ -2,47 +2,48 @@
 
 namespace TaskForce\Tasks;
 
-use TaskForce\Tasks\Actions\NewAction;
+use TaskForce\Tasks\Actions\AbstractAction;
+use TaskForce\Tasks\Actions\CallAction;
 use TaskForce\Tasks\Actions\CancelAction;
+use TaskForce\Tasks\Actions\CompleteAction;
+use TaskForce\Tasks\Actions\RefuseAction;
 
 class Task
 {
+    const ROLE_CLIENT = 'Client';
+    const ROLE_WORKER = 'Worker';
+
+    const ACTION_CANCEL = CancelAction::class;
+    const ACTION_CALL = CallAction::class;
+    const ACTION_COMPLETE = CompleteAction::class;
+    const ACTION_REFUSE = RefuseAction::class;
+
+    const ACTIONS = [
+        self::ACTION_CANCEL,
+        self::ACTION_CALL,
+        self::ACTION_COMPLETE,
+        self::ACTION_REFUSE
+    ];
+
     const STATUS_NEW = 'new';
     const STATUS_CANCEL = 'cancel';
     const STATUS_PROCEED = 'in_work';
-    const STATUS_DONE = 'done';
+    const STATUS_COMPLETE = 'done';
     const STATUS_FAIL = 'fail';
 
-    const ACTION_CANCEL = 'do_cancel';
-    const ACTION_CALL = 'do_call';
-    const ACTION_DONE = 'do_done';
-    const ACTION_REFUSE = 'do_refuse';
+    const ACTION_TO_STATUS = [
+        self::ACTION_CANCEL => self::STATUS_CANCEL,
+        self::ACTION_COMPLETE => self::STATUS_COMPLETE,
+        self::ACTION_CALL => self::STATUS_PROCEED,
+        self::ACTION_REFUSE => self::STATUS_FAIL
+    ];
 
-    private $statusValues = [
+    const STATUS_VALUES = [
         self::STATUS_NEW => 'Новое',
         self::STATUS_CANCEL => 'Отменено',
         self::STATUS_PROCEED => 'В работе',
-        self::STATUS_DONE => 'Выполнено',
+        self::STATUS_COMPLETE => 'Выполнено',
         self::STATUS_FAIL => 'Провалено',
-    ];
-
-    private $actionValues = [
-        self::ACTION_CANCEL => 'Отменить',
-        self::ACTION_CALL => 'Откликнуться',
-        self::ACTION_DONE => 'Выполнено',
-        self::ACTION_REFUSE => 'Отказаться'
-    ];
-
-    private $nextStatuses = [
-        self::ACTION_CANCEL => self::STATUS_CANCEL,
-        self::ACTION_CALL => self::STATUS_PROCEED,
-        self::ACTION_DONE => self::STATUS_DONE,
-        self::ACTION_REFUSE => self::STATUS_FAIL,
-    ];
-
-    private $availableActions = [
-        self::STATUS_NEW => [self::ACTION_CANCEL, self::ACTION_CALL],
-        self::STATUS_PROCEED => [self::ACTION_DONE, self::ACTION_REFUSE]
     ];
 
     private $clientId;
@@ -54,99 +55,73 @@ class Task
      *
      * @param int $clientId - интификатор заказчика
      * @param int $workerId - идентификатор исполнителя
+     * @param string $status - текущий статус задания (новый -- по умолчанию)
      */
-    public function __construct($clientId, $workerId) {
+    public function __construct($clientId, $workerId, string $status = self::STATUS_NEW)
+    {
         $this->clientId = $clientId;
         $this->workerId = $workerId;
+        $this->status = $status;
     }
 
     /**
-     * @return int
+     * @return array
      */
-    public function getWorkerId(): int
+    public function getStatusValues() : array
     {
-        return $this->workerId;
+        return self::STATUS_VALUES;
     }
 
     /**
-     * @return int
+     * @return array
      */
-    public function getClientId(): int
+    public function getActionValues() : array
     {
-        return $this->clientId;
+        return self::ACTIONS;
     }
 
     /**
+     * @param int $id
      * @return string
      */
-    public function getStatus(): string
+    public function getCurrentRole(int $id): string
     {
-        return $this->status;
-    }
+        $role = '';
 
-    /**
-     * @return array - расшифровка статусов
-     */
-    public function getStatusValues() {
-        return $this->statusValues;
-    }
+        if ($id === $this->workerId) {
+            $role = self::ROLE_WORKER;
+        };
 
-    /**
-     * @return array - расшифровка действий заказчика
-     */
-    public function getActionValues() {
-        return $this->actionValues;
-    }
-
-    /**
-     * Возвращает следующий статус, в соответствии с выбором действия (отклика) на заказ
-     *
-     * @param string $action - ключ, по которому определяется следующий статус
-     * @return bool|string
-     */
-    public function getNextStatus($action) {
-        $next_status = false;
-        if (array_key_exists ($action, $this->nextStatuses)) {
-            $next_status = $this->nextStatuses[$action];
+        if ($id === $this->clientId) {
+            $role = self::ROLE_CLIENT;
         }
-        return $next_status;
+
+        return $role;
     }
 
     /**
-     * Возвращает список доступных действий для текущего статуса
-     *
-     * @param string $status - текущий статус
-     * @return bool|array
+     * @param AbstractAction $action
+     * @return string
      */
-    public function getAvailableAction($status) {
-        $availableActions = false;
-        if (array_key_exists ($status, $this->availableActions)) {
-            $availableActions = $this->availableActions[$status];
+    public function getNextStatus(AbstractAction $action): string
+    {
+        return self::ACTION_TO_STATUS[$action::getName()];
+    }
+
+    /**
+     * @param int $userId
+     * @return array
+     */
+    public function getAvailableAction(int $userId) : array
+    {
+        $availableActions = [];
+
+        foreach(self::ACTIONS as $action) {
+            if ($action::isAllowed($this->getCurrentRole($userId), $this->status)) {
+                array_push($availableActions, $action::getName());
+            }
         }
+
         return $availableActions;
     }
-
-    /**
-     * @param int $userId
-     */
-    public function start(int $userId) {
-        if (!NewAction::verifyAbility($userId, $this)) {
-            echo 'Ошибка';
-        }
-
-        $this->status = self::STATUS_NEW;
-    }
-
-    /**
-     * @param int $userId
-     */
-    public function cancel(int $userId) {
-        if (!CancelAction::verifyAbility($userId, $this)) {
-            echo 'Ошибка';
-        }
-
-        $this->status = self::STATUS_CANCEL;
-    }
-
-    // TODO: реализовать остальные классы
 }

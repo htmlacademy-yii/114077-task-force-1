@@ -1,13 +1,18 @@
 <?php
 
+require_once '../vendor/autoload.php';
 use TaskForce\Tasks\Task;
-require_once 'vendor/autoload.php';
+
+use TaskForce\Tasks\Actions\CallAction;
+use TaskForce\Tasks\Actions\CancelAction;
+use TaskForce\Tasks\Actions\CompleteAction;
+use TaskForce\Tasks\Actions\RefuseAction;
 
 use PHPUnit\Framework\TestCase;
 
 class TaskTest extends TestCase
 {
-    public function testGetStatusVaules()
+    public function testGetStatusValues()
     {
         $task = new Task(1,1);
 
@@ -16,7 +21,7 @@ class TaskTest extends TestCase
             $task::STATUS_NEW => 'Новое',
             $task::STATUS_CANCEL => 'Отменено',
             $task::STATUS_PROCEED => 'В работе',
-            $task::STATUS_DONE => 'Выполнено',
+            $task::STATUS_COMPLETE => 'Выполнено',
             $task::STATUS_FAIL => 'Провалено',
         ];
 
@@ -24,16 +29,16 @@ class TaskTest extends TestCase
     }
 
 
-    public function testgetActionValues()
+    public function testGetActionValues()
     {
         $task = new Task(1,1);
-
         $incomeArray = $task->getActionValues();
+
         $expArray = [
-            $task::ACTION_CANCEL => 'Отменить',
-            $task::ACTION_CALL => 'Откликнуться',
-            $task::ACTION_DONE => 'Выполнено',
-            $task::ACTION_REFUSE => 'Отказаться'
+            CancelAction::class,
+            CallAction::class,
+            CompleteAction::class,
+            RefuseAction::class,
         ];
 
         $this->assertEquals($expArray, $incomeArray);

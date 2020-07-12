@@ -10,5 +10,5 @@ abstract class AbstractAction
 
     abstract static function getCode(): string;
 
-    abstract static function verifyAbility(int $userId, Task $task): string;
+    abstract static function isAllowed(string $role, string $status): bool;
 }
