@@ -31,7 +31,7 @@ class TaskTest extends TestCase
 
     public function testGetActionValues()
     {
-        $task = new Task(1,1);
+        $task = new Task(1,2);
         $incomeArray = $task->getActionValues();
 
         $expArray = [
@@ -46,7 +46,7 @@ class TaskTest extends TestCase
 
     public function testGetNextStatus()
     {
-        $task = new Task(1,1);
+        $task = new Task(1,2);
 
         $income = $task->getNextStatus($task::ACTION_CANCEL);
         $exp = $task::STATUS_CANCEL;
@@ -56,7 +56,7 @@ class TaskTest extends TestCase
 
     public function testGetAvailableAction()
     {
-        $task = new Task(1,1);
+        $task = new Task(1,2);
 
         $incomeArray = $task->getAvailableAction($task::STATUS_NEW);
         $expArray = [
@@ -66,4 +66,12 @@ class TaskTest extends TestCase
         $this->assertEquals($expArray[$task::STATUS_NEW], $incomeArray);
     }
 
+    public function testAvailableAction() {
+        $task_new = new Task(1, 2);
+        $this->assertEquals($task_new->getAvailableAction(1), [CancelAction::getName()]);
+
+        $task_proceed = new Task(1, 2, 'in_work');
+        $this->assertEquals($task_proceed->getAvailableAction(2), [RefuseAction::getName()]);
+        $this->assertEquals($task_proceed->getAvailableAction(1), [CompleteAction::getName()]);
+    }
 }
